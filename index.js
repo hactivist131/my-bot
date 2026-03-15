@@ -5,6 +5,8 @@ import moment from "moment"
 
 const prefix = "."
 
+console.log("🚀 Starting WhatsApp Bot...")
+
 // Feature settings
 let settings = {
   autoreact: false,
@@ -14,25 +16,25 @@ let settings = {
   welcome: false
 }
 
-// Command categories
+// Command categories for .menu (100+ commands simplified into categories)
 const commands = {
   General: [
     ".menu", ".ping", ".owner", ".info", ".help"
   ],
   Fun: [
-    ".joke", ".quote", ".meme", ".8ball", ".trivia", ".rps", ".coinflip"
+    ".joke", ".quote", ".meme", ".8ball", ".trivia", ".rps", ".coinflip", ".dice", ".roll", ".fortune", ".story", ".compliment", ".insult", ".randomfact", ".challenge", ".mathgame", ".hangman", ".quiz", ".truth", ".dare"
   ],
   Media: [
-    ".sticker", ".tts", ".ytmp3", ".ytmp4", ".tiktok", ".igdownload", ".play"
+    ".sticker", ".tts", ".ytmp3", ".ytmp4", ".tiktok", ".igdownload", ".play", ".video2audio", ".image", ".gif", ".convert", ".resize", ".compress", ".filter", ".rembg", ".ocr"
   ],
   Group: [
-    ".kick", ".add", ".promote", ".demote", ".mute", ".unmute", ".warn", ".setdesc", ".setwelcome"
+    ".kick", ".add", ".promote", ".demote", ".mute", ".unmute", ".warn", ".setdesc", ".setwelcome", ".seticon", ".tagall", ".groupinfo", ".open", ".close", ".inviteinfo"
   ],
   Utility: [
-    ".time", ".weather", ".translate", ".calc", ".shorturl", ".reminder", ".note", ".qr", ".barcode"
+    ".time", ".weather", ".translate", ".calc", ".shorturl", ".reminder", ".note", ".qr", ".barcode", ".covid", ".search", ".lyrics", ".define", ".currency", ".todo", ".poll", ".remindme", ".alarm", ".dictionary"
   ],
   AI: [
-    ".chatgpt", ".askai", ".imgai", ".storyai"
+    ".chatgpt", ".askai", ".imgai", ".storyai", ".jokeai", ".poemai", ".adviceai", ".summarizeai", ".translateai"
   ],
   Settings: [
     ".autoreact on/off", ".autoread on/off", ".autotyping on/off",
@@ -48,8 +50,12 @@ async function startBot() {
   const sock = makeWASocket({ logger: pino({ level: "silent" }), auth: state })
 
   sock.ev.on("creds.update", saveCreds)
+
+  // Connection logging + QR
   sock.ev.on("connection.update", update => {
+    console.log("Connection update:", update)
     if (update.connection === "open") console.log("✅ Bot Connected")
+    if (update.connection === "close") console.log("❌ Bot Disconnected")
   })
 
   sock.ev.on("messages.upsert", async ({ messages }) => {
@@ -83,8 +89,8 @@ async function startBot() {
     if (command.startsWith(".antidelete")) toggleFeature("antidelete", args[1], from)
     if (command.startsWith(".welcome")) toggleFeature("welcome", args[1], from)
 
-    // Placeholder for other 100+ commands
-    if (allCommands.includes(command)) {
+    // Placeholder for all other 100+ commands
+    if (allCommands.includes(command) && !command.startsWith(".menu") && !command.startsWith(".auto")) {
       await sock.sendMessage(from, { text: `✅ Command "${command}" received! (Work in progress)` })
     }
   })
