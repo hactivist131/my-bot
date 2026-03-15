@@ -5,6 +5,7 @@ import moment from "moment"
 
 const prefix = "."
 
+// 🔹 Startup log
 console.log("🚀 Starting WhatsApp Bot...")
 
 // Feature settings
@@ -16,30 +17,15 @@ let settings = {
   welcome: false
 }
 
-// Command categories for .menu (100+ commands simplified into categories)
+// Command categories for .menu (100+ commands simplified)
 const commands = {
-  General: [
-    ".menu", ".ping", ".owner", ".info", ".help"
-  ],
-  Fun: [
-    ".joke", ".quote", ".meme", ".8ball", ".trivia", ".rps", ".coinflip", ".dice", ".roll", ".fortune", ".story", ".compliment", ".insult", ".randomfact", ".challenge", ".mathgame", ".hangman", ".quiz", ".truth", ".dare"
-  ],
-  Media: [
-    ".sticker", ".tts", ".ytmp3", ".ytmp4", ".tiktok", ".igdownload", ".play", ".video2audio", ".image", ".gif", ".convert", ".resize", ".compress", ".filter", ".rembg", ".ocr"
-  ],
-  Group: [
-    ".kick", ".add", ".promote", ".demote", ".mute", ".unmute", ".warn", ".setdesc", ".setwelcome", ".seticon", ".tagall", ".groupinfo", ".open", ".close", ".inviteinfo"
-  ],
-  Utility: [
-    ".time", ".weather", ".translate", ".calc", ".shorturl", ".reminder", ".note", ".qr", ".barcode", ".covid", ".search", ".lyrics", ".define", ".currency", ".todo", ".poll", ".remindme", ".alarm", ".dictionary"
-  ],
-  AI: [
-    ".chatgpt", ".askai", ".imgai", ".storyai", ".jokeai", ".poemai", ".adviceai", ".summarizeai", ".translateai"
-  ],
-  Settings: [
-    ".autoreact on/off", ".autoread on/off", ".autotyping on/off",
-    ".antidelete on/off", ".welcome on/off"
-  ]
+  General: [".menu", ".ping", ".owner", ".info", ".help"],
+  Fun: [".joke", ".quote", ".meme", ".8ball", ".trivia", ".rps", ".coinflip", ".dice", ".roll", ".fortune", ".story", ".compliment", ".insult", ".randomfact", ".challenge", ".mathgame", ".hangman", ".quiz", ".truth", ".dare"],
+  Media: [".sticker", ".tts", ".ytmp3", ".ytmp4", ".tiktok", ".igdownload", ".play", ".video2audio", ".image", ".gif", ".convert", ".resize", ".compress", ".filter", ".rembg", ".ocr"],
+  Group: [".kick", ".add", ".promote", ".demote", ".mute", ".unmute", ".warn", ".setdesc", ".setwelcome", ".seticon", ".tagall", ".groupinfo", ".open", ".close", ".inviteinfo"],
+  Utility: [".time", ".weather", ".translate", ".calc", ".shorturl", ".reminder", ".note", ".qr", ".barcode", ".covid", ".search", ".lyrics", ".define", ".currency", ".todo", ".poll", ".remindme", ".alarm", ".dictionary"],
+  AI: [".chatgpt", ".askai", ".imgai", ".storyai", ".jokeai", ".poemai", ".adviceai", ".summarizeai", ".translateai"],
+  Settings: [".autoreact on/off", ".autoread on/off", ".autotyping on/off", ".antidelete on/off", ".welcome on/off"]
 }
 
 // Flattened list for quick access
@@ -51,9 +37,9 @@ async function startBot() {
 
   sock.ev.on("creds.update", saveCreds)
 
-  // Connection logging + QR
+  // 🔹 Connection logging + QR code info
   sock.ev.on("connection.update", update => {
-    console.log("Connection update:", update)
+    console.log("Connection update:", update) // QR code and connection steps
     if (update.connection === "open") console.log("✅ Bot Connected")
     if (update.connection === "close") console.log("❌ Bot Disconnected")
   })
@@ -71,7 +57,7 @@ async function startBot() {
     if (settings.autoread) await sock.readMessages([msg.key])
     if (settings.autotyping) await sock.sendPresenceUpdate("composing", from)
 
-    // .menu command
+    // 🔹 .menu command
     if (command === ".menu") {
       let menuText = `🤖 *WHATSAPP BOT MENU* (${allCommands.length} Commands)\n\n`
       for (let category in commands) {
@@ -82,14 +68,14 @@ async function startBot() {
       await sock.sendMessage(from, { text: menuText })
     }
 
-    // Toggle settings
+    // 🔹 Toggle feature commands
     if (command.startsWith(".autoreact")) toggleFeature("autoreact", args[1], from)
     if (command.startsWith(".autoread")) toggleFeature("autoread", args[1], from)
     if (command.startsWith(".autotyping")) toggleFeature("autotyping", args[1], from)
     if (command.startsWith(".antidelete")) toggleFeature("antidelete", args[1], from)
     if (command.startsWith(".welcome")) toggleFeature("welcome", args[1], from)
 
-    // Placeholder for all other 100+ commands
+    // 🔹 Placeholder for other 100+ commands
     if (allCommands.includes(command) && !command.startsWith(".menu") && !command.startsWith(".auto")) {
       await sock.sendMessage(from, { text: `✅ Command "${command}" received! (Work in progress)` })
     }
