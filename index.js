@@ -6,7 +6,7 @@ import moment from "moment"
 const prefix = "."
 
 // 🔹 Startup log
-console.log("🚀 Starting WhatsApp Bot... (debug)")
+console.log("🚀 Starting WhatsApp Bot...")
 
 // Feature settings
 let settings = {
@@ -17,7 +17,7 @@ let settings = {
   welcome: false
 }
 
-// Command categories for .menu (100+ commands simplified)
+// Command categories for .menu
 const commands = {
   General: [".menu", ".ping", ".owner", ".info", ".help"],
   Fun: [".joke", ".quote", ".meme", ".8ball", ".trivia", ".rps", ".coinflip", ".dice", ".roll", ".fortune", ".story", ".compliment", ".insult", ".randomfact", ".challenge", ".mathgame", ".hangman", ".quiz", ".truth", ".dare"],
@@ -37,14 +37,14 @@ async function startBot() {
 
     sock.ev.on("creds.update", saveCreds)
 
-    // 🔹 Connection updates & QR code
+    // 🔹 Connection updates + QR code
     sock.ev.on("connection.update", update => {
       console.log("Connection update:", update)
       if (update.connection === "open") console.log("✅ Bot Connected")
       if (update.connection === "close") console.log("❌ Bot Disconnected")
     })
 
-    // 🔹 Message handler
+    // 🔹 Messages handler
     sock.ev.on("messages.upsert", async ({ messages }) => {
       const msg = messages[0]
       if (!msg.message || msg.key.fromMe) return
@@ -58,7 +58,7 @@ async function startBot() {
       if (settings.autoread) await sock.readMessages([msg.key])
       if (settings.autotyping) await sock.sendPresenceUpdate("composing", from)
 
-      // 🔹 .menu
+      // 🔹 .menu command
       if (command === ".menu") {
         let menuText = `🤖 *WHATSAPP BOT MENU* (${allCommands.length} Commands)\n\n`
         for (let category in commands) {
@@ -69,7 +69,7 @@ async function startBot() {
         await sock.sendMessage(from, { text: menuText })
       }
 
-      // 🔹 Toggle feature commands
+      // 🔹 Toggle features
       if (command.startsWith(".autoreact")) toggleFeature("autoreact", args[1], from)
       if (command.startsWith(".autoread")) toggleFeature("autoread", args[1], from)
       if (command.startsWith(".autotyping")) toggleFeature("autotyping", args[1], from)
@@ -90,6 +90,7 @@ async function startBot() {
       settings[feature] = value === "on"
       await sock.sendMessage(from, { text: `${settings[feature] ? "✅ Enabled" : "❌ Disabled"} ${feature}` })
     }
+
   } catch (err) {
     console.error("❌ Error starting bot:", err)
   }
