@@ -1,3 +1,4 @@
+console.log("🚀 Starting WhatsApp Bot...")
 import makeWASocket, { useMultiFileAuthState } from "@whiskeysockets/baileys"
 import pino from "pino"
 import fs from "fs-extra"
